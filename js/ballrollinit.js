@@ -1,5 +1,5 @@
 /**
-  * Initialization
+  * Ball Roll Box2D Web Game
   *
   * @author David A Conway Jr.
   *
@@ -10,7 +10,7 @@
   * http://lib.ivank.net/?p=demos&d=box2D
   */
 
-function box2dutils() {
+function ballrollinit() {
     // Initialize Variables
     var world;
     var stage;
@@ -55,7 +55,7 @@ function box2dutils() {
             // Set Actor Position
             actor.x = p.x *scale; // updating actor
             actor.y = p.y *scale;
-            actor.rotation = body.GetAngle()*180/Math.PI;
+            actor.rotation = body.GetAngle() * 180/Math.PI;
         }
     };
 
@@ -76,11 +76,11 @@ function box2dutils() {
         // Create Body
         var bodyDef = new b2BodyDef;
             bodyDef.type = bodyType;
-            bodyDef.position.Set(x/scale,y/scale);
+            bodyDef.position.Set(x, y);
 
         // Create Polygon
         var polygonShape = new b2PolygonShape;
-            polygonShape.SetAsBox(width/2/scale, height/2/scale);
+            polygonShape.SetAsBox(width, height);
 
         // Create Fixture
         var fixtureDef = new b2FixtureDef;
@@ -99,8 +99,8 @@ function box2dutils() {
         // Bitmap Specified?
         if(bitmap != undefined) {
             // Create Bitmap
-            var bm = new Bitmap(bitmap);
-                bm.x = bm.y = -100;
+            var bm = new Bitmap( new BitmapData(bitmap) );
+                bm.x = bm.y = -1*scale;
 
             // Add child
             actor.addChild(bm);
@@ -110,7 +110,7 @@ function box2dutils() {
             // Color is Undefined
             if(color == undefined) {
                 // Set Color
-                color = 0x000000;
+                color = 0;
             }
 
             // Opacity is Undefined
@@ -118,11 +118,10 @@ function box2dutils() {
                 // Set Opacity
                 opacity = 1;
             }
-            console.log(color);
 
             // Fill Color
             actor.graphics.beginFill(color, opacity);
-            actor.graphics.drawRect(-100, -100, width, height);
+            actor.graphics.drawRect(-1 * scale, -1 * scale, width*scale, height*scale);
         }
 
         // Scale Actor
@@ -130,6 +129,7 @@ function box2dutils() {
         actor.scaleY = height;
 
         // Add To Array
+        stage.addChild(actor);
         bodies.push(body);
         actors.push(actor);
     }
@@ -150,11 +150,11 @@ function box2dutils() {
         // Create Body
         var bodyDef = new b2BodyDef;
             bodyDef.type = bodyType;
-            bodyDef.position.Set(x/scale, y/scale);
+            bodyDef.position.Set(x, y);
 
         // Create Polgygon
         var circleShape = new b2CircleShape;
-            circleShape.SetRadius(size/2/scale);
+            circleShape.SetRadius(size);
 
         // Create Fixture
         var fixtureDef = new b2FixtureDef;
@@ -173,8 +173,8 @@ function box2dutils() {
         // Bitmap Specified?
         if(bitmap != undefined) {
             // Create Bitmap
-            var bm = new Bitmap(bitmap);
-                bm.x = bm.y = -100;
+            var bm = new Bitmap( new BitmapData(bitmap) );
+                bm.x = bm.y = -1*scale;
 
             // Add child
             actor.addChild(bm);
@@ -184,7 +184,7 @@ function box2dutils() {
             // Color is Undefined
             if(color == undefined) {
                 // Set Color
-                color = 0x000000;
+                color = 0;
             }
 
             // Opacity is Undefined
@@ -195,13 +195,14 @@ function box2dutils() {
 
             // Fill Color
             actor.graphics.beginFill(color, opacity);
-            actor.graphics.drawCircle(-100, -100, size);
+            actor.graphics.drawCircle(0, 0, scale);
         }
 
         // Scale Actor
         actor.scaleX = actor.scaleY = size;
 
         // Add To Array
+        stage.addChild(actor);
         bodies.push(body);
         actors.push(actor);
     }
@@ -212,27 +213,21 @@ function box2dutils() {
     function Main() {
         Sprite.apply(this);
 
-        this.graphics.beginFill(0xccff88);
-        this.graphics.drawRect(0,0,stage.stageWidth, stage.stageHeight);
+        this.graphics.beginFill(0xb1e4ff);
+        this.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
     }
     Main.prototype = new Sprite();
-
 
     // Create Stage
     stage.addEventListener(Event.ENTER_FRAME, update);
     stage.addChild(new Main());
 
-    // Add Background
-    /*var bg = new Bitmap( new BitmapData("winter2.jpg") );
-        bg.scaleX = bg.scaleY = stage.stageHeight/512;
-        stage.addChild(bg);*/
-
     // Create Walls
-    createBox(10, 1, 9, stage.stageHeight/scale + 1, 'static');
-    createBox(1, scale, -1, 3, 'static');
-    createBox(1, scale, 1, 3, 'static');
+    createBox(100, 1, 0, stage.stageHeight/100 + 1, 'static');
+    createBox(1, 100, -1, 3, 'static');
+    createBox(1, 100, stage.stageWidth/100 + 1, 3, 'static');
 
     // Create Player
-    createBall(5, 1, 1, 'dynamic');
+    createBall(0.25, 0, 0, 'dynamic', 0xcccccc, 1);
 
 };
